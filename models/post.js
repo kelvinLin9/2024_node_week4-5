@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 // - name：貼文姓名(必填)
 // - image：貼文圖片
@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 // - type：貼文種類 fan(粉絲)、group(社團) (必填)
 // - tags：貼文標籤(必填)
 
-const postSchema = new mongoose.Schema(
+const postSchema = new Schema(
     {
         name: {
             type: String,
@@ -56,4 +56,4 @@ const postSchema = new mongoose.Schema(
     }
 );
 
-export default mongoose.model('Post', postSchema);
+export default model('Post', postSchema);
