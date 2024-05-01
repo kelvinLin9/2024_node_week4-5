@@ -47,14 +47,22 @@ export const getPost = async(req, res, next) => {
 
 
 export const createPost = async(req, res, next) => {
-    try {
-        const post = new PostModel(req.body);
-        const savedPost = await post.save();
-        sendResponse(res, 201, savedPost, 'Post created successfully');
-    } catch (error) {
-        next(error);
-    }
+  try {
+      const userId = req.userId;
+      if (!userId) {
+          return sendError(res, 400, 'User ID is required');
+      }
+      const post = new PostModel({
+          ...req.body,
+          userId: userId
+      });
+      const savedPost = await post.save();
+      sendResponse(res, 201, savedPost, 'Post created successfully');
+  } catch (error) {
+      next(error);
+  }
 };
+
 
 export const updatePost = async(req, res, next) => {
     try {
