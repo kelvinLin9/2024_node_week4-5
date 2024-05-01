@@ -27,15 +27,23 @@ const userSchema = new Schema({
         required: [true, 'password 未填寫'],
         select: false
     },
-    phone: String,
-    birthday: Date,
-    address: {
-        detail: String
-    },
-    verificationToken: {
-        type: String,
-        default: '',
-        select: false
+    photo: {
+      type: String,
+      default: '',
+      validate: {
+          validator: function(value) {
+              return validator.isURL(value, {
+                  protocols: ['http', 'https'],
+                  require_protocol: true
+              });
+          },
+          message: '大頭照的 URL 格式不正確'
+      }
+  },
+  verificationToken: {
+      type: String,
+      default: '',
+      select: false
     }
 }, {
     versionKey: false,

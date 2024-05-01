@@ -11,47 +11,53 @@ import { Schema, model } from 'mongoose';
 
 const postSchema = new Schema(
     {
-        name: {
-            type: String,
-            required: [true, '貼文姓名必填'],
-            cast: false
-        },
-        image: {
-            type: String,
-            default: '',
-            cast: false
-        },
-        content: {
-            type: String,
-            required: [true, '貼文內容必填'],
-            cast: false
-        },
-        likes: {
-            type: Number,
-            default: 0,
-            cast: false
-        },
-        comments: {
-            type: Number,
-            default: 0,
-            cast: false
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            select: false
-        },
-        type: {
-            type: String,
-            required: [true, '貼文種類必填'],
-            enum: ['fan','group'],
-            cast: false
-        },
-        tags: [{
-            type: String,
-            cast: false
-        }]
-    }, {
+      name: {
+          type: String,
+          required: [true, '貼文姓名必填'],
+          cast: false
+      },
+      image: {
+          type: String,
+          default: '',
+          cast: false
+      },
+      content: {
+          type: String,
+          required: [true, '貼文內容必填'],
+          cast: false
+      },
+      likes: {
+          type: Number,
+          default: 0,
+          cast: false
+      },
+      comments: {
+          type: Number,
+          default: 0,
+          cast: false
+      },
+      createdAt: {
+          type: Date,
+          default: Date.now,
+          select: false
+      },
+      type: {
+          type: String,
+          required: [true, '貼文種類必填'],
+          enum: ['fan','group'],
+          cast: false
+      },
+      tags: [{
+          type: String,
+          cast: false
+      }],
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, '貼文必須關聯一個使用者']
+      }
+    },
+    {
         versionKey: false
     }
 );

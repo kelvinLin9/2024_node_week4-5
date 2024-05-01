@@ -17,25 +17,34 @@ function sendError(res, statusCode, message) {
 }
 
 export const getPosts = async(req, res, next) => {
-    try {
-        const posts = await PostModel.find({});
-        sendResponse(res, 200, posts);
-    } catch (error) {
-        next(error);
-    }
+  try {
+      const { page = 1, limit = 10 } = req.query;
+      const posts = await PostModel.find({})
+                                  .populate('userId', 'name email')
+                                  .skip((page - 1) * limit)
+                                  .limit(limit)
+                                  .exec();
+      sendResponse(res, 200, posts);
+  } catch (error) {
+      next(createHttpError(500, 'Server error retrieving posts'));
+  }
 };
 
+
 export const getPost = async(req, res, next) => {
-    try {
-        const post = await PostModel.findById(req.params.id);
-        if (!post) {
-            return sendError(res, 404, 'Post not found');
-        }
-        sendResponse(res, 200, post);
-    } catch (error) {
-        next(error);
-    }
+  try {
+      const post = await PostModel.findById(req.params.id)
+                                 .populate('userId', 'name email')
+                                 .exec();
+      if (!post) {
+          return sendError(res, 404, 'Post not found');
+      }
+      sendResponse(res, 200, post);
+  } catch (error) {
+      next(createHttpError(500, 'Server error retrieving post'));
+  }
 };
+
 
 export const createPost = async(req, res, next) => {
     try {
