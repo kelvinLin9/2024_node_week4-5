@@ -28,10 +28,10 @@ const signup = async (req, res, next) => {
       });
 
       // 發送帶有 token 的響應
-      res.send({
-          status: true,
-          token: generateToken({ userId: user._id })
-      });
+      // res.send({
+      //     status: true,
+      //     token: generateToken({ userId: user._id })
+      // });
   } catch (error) {
       next(error);
   }
