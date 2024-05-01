@@ -18,17 +18,28 @@ function sendError(res, statusCode, message) {
 
 export const getPosts = async(req, res, next) => {
   try {
-      const { page = 1, limit = 10 } = req.query;
-      const posts = await PostModel.find({})
+      const { page = 1, limit = 10, sort = 'desc', keyword = '' } = req.query;
+
+      let query = {};
+      if (keyword) {
+          query.content = { $regex: keyword, $options: 'i' };
+      }
+
+      let sortOptions = { createdAt: sort === 'asc' ? 1 : -1 };
+
+      const posts = await PostModel.find(query)
                                   .populate('userId', 'name email')
                                   .skip((page - 1) * limit)
                                   .limit(limit)
+                                  .sort(sortOptions)
                                   .exec();
+
       sendResponse(res, 200, posts);
   } catch (error) {
       next(createHttpError(500, 'Server error retrieving posts'));
   }
 };
+
 
 
 export const getPost = async(req, res, next) => {
