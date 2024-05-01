@@ -48,13 +48,13 @@ export const getPost = async(req, res, next) => {
 
 export const createPost = async(req, res, next) => {
   try {
-      const userId = req.userId;
+      const { userId } = req.body;  // 從請求體中提取 userId
       if (!userId) {
           return sendError(res, 400, 'User ID is required');
       }
       const post = new PostModel({
           ...req.body,
-          userId: userId
+          userId
       });
       const savedPost = await post.save();
       sendResponse(res, 201, savedPost, 'Post created successfully');
@@ -62,6 +62,7 @@ export const createPost = async(req, res, next) => {
       next(error);
   }
 };
+
 
 
 export const updatePost = async(req, res, next) => {
