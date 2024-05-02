@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import createHttpError from 'http-errors';
 import UsersModel from '../models/user.js'
 import { generateToken, verifyToken } from '../utils/index.js';
-import handleErrorAsync from '../utils/handleErrorAsync.js';
+import handleErrorAsync from '../statusHandle/handleErrorAsync';
 
 const signup = handleErrorAsync(async (req, res, next) => {
     const { email, password, name } = req.body;
