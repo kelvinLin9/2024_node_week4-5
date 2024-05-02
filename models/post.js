@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 
-// - name：貼文姓名(必填)
 // - image：貼文圖片
 // - content：貼文內容(必填)
 // - likes：按讚數
@@ -8,14 +7,10 @@ import { Schema, model } from 'mongoose';
 // - createdAt：發文時間
 // - type：貼文種類 fan(粉絲)、group(社團) (必填)
 // - tags：貼文標籤(必填)
+// - userId：關聯發文者資料(必填)
 
 const postSchema = new Schema(
     {
-      name: {
-          type: String,
-          required: [true, '貼文姓名必填'],
-          cast: false
-      },
       image: {
           type: String,
           default: '',
