@@ -1,7 +1,6 @@
 import PostModel from '../models/post.js';
 import createHttpError from 'http-errors';
-import handleErrorAsync from '../statusHandle/handleErrorAsync';
-
+import { handleErrorAsync} from '../statusHandle/handleErrorAsync.js';
 
 
 // 你感覺 `sendError` 函數和錯誤處理中間件（`app.use`）很相似，這是因為它們的目的和行為的確非常類似，都是用來處理和格式化錯誤響應的。然而，它們在應用中各自扮演著特定的角色和使用時機：

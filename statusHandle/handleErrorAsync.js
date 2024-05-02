@@ -1,4 +1,4 @@
-const handleErrorAsync = (func) => {
+export const handleErrorAsync = (func) => {
   return async (req, res, next) => {
     try {
       await func(req, res, next);  // 嘗試執行原始函數
