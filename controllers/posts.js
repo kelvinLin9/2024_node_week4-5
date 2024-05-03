@@ -34,7 +34,7 @@ function sendError(res, statusCode, message) {
   });
 }
 
-export const getPosts = handleErrorAsync(async (req, res, next) => {
+export const getPosts = handleErrorAsync(async (req, res) => {
   const { page = 1, limit = 10, sort = 'desc', keyword = '' } = req.query;
 
   let query = {};
@@ -55,7 +55,7 @@ export const getPosts = handleErrorAsync(async (req, res, next) => {
 });
 
 
-export const getPost = handleErrorAsync(async (req, res, next) => {
+export const getPost = handleErrorAsync(async (req, res) => {
   const post = await PostModel.findById(req.params.id)
                              .populate('userId', 'name email')
                              .exec();
@@ -66,8 +66,8 @@ export const getPost = handleErrorAsync(async (req, res, next) => {
 });
 
 
-export const createPost = handleErrorAsync(async (req, res, next) => {
-  const { userId } = req.body;  // 從請求體中提取 userId
+export const createPost = handleErrorAsync(async (req, res) => {
+  const { userId } = req.body;
   if (!userId) {
       return sendError(res, 400, 'User ID is required');
   }
@@ -80,7 +80,7 @@ export const createPost = handleErrorAsync(async (req, res, next) => {
 });
 
 
-export const updatePost = handleErrorAsync(async (req, res, next) => {
+export const updatePost = handleErrorAsync(async (req, res) => {
   const post = await PostModel.findByIdAndUpdate(req.params.id, req.body, { 
       new: true,
       runValidators: true,
@@ -91,7 +91,7 @@ export const updatePost = handleErrorAsync(async (req, res, next) => {
   sendResponse(res, 200, post, 'Post updated successfully');
 });
 
-export const deletePost = handleErrorAsync(async (req, res, next) => {
+export const deletePost = handleErrorAsync(async (req, res) => {
   const post = await PostModel.findByIdAndDelete(req.params.id);
   if (!post) {
       return sendError(res, 404, 'Post not found');
@@ -99,7 +99,7 @@ export const deletePost = handleErrorAsync(async (req, res, next) => {
   sendResponse(res, 200, post, 'Post deleted successfully');
 });
 
-export const deletePosts = handleErrorAsync(async (req, res, next) => {
+export const deletePosts = handleErrorAsync(async (res) => {
   const result = await PostModel.deleteMany({});
   if (result.deletedCount === 0) {
       return sendError(res, 404, 'No posts found to delete');
