@@ -1,11 +1,11 @@
 {
-  "name": "node-hw-week3",
+  "name": "node-hw-week3-5",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "node ./bin/www.js",
-    "start:dev": "nodemon ./bin/www.js"
+    "start:dev": "NODE_ENV=dev nodemon ./bin/www"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
