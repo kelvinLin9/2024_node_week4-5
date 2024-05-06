@@ -11,6 +11,18 @@ import postsRouter from './routes/posts.js';
 
 const app = express();
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception: ', err);
+  // 記錄錯誤後，進行重啟或終止程序，取決於應用程式需求
+  process.exit(1); // 退出程序
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // 處理邏輯，例如記錄錯誤或發送警報
+});
+
+
 mongoose.connect(`mongodb+srv://kelvin80121:${process.env.DB_CONNECTION_STRING}@data.uc1oamo.mongodb.net`)
   .then(res=> console.log("連線資料成功"))
   .catch(err=> console.log("連線資料失敗"));
@@ -48,12 +60,16 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.use((res) => {
+// 修正404 Not Found中間件
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: 'Resource not found'
   });
 });
+
+
+
 
 
 // 故意拋出一個錯誤來測試 uncaughtException 處理
@@ -67,16 +83,7 @@ app.use((res) => {
 // });
 
 
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception: ', err);
-  // 記錄錯誤後，進行重啟或終止程序，取決於應用程式需求
-  process.exit(1); // 退出程序
-});
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // 處理邏輯，例如記錄錯誤或發送警報
-});
 
 
 export default app;
