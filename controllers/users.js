@@ -51,7 +51,56 @@ const login = handleErrorAsync(async (req, res, next) => {
     });
 });
 
+const forgetPassword = handleErrorAsync(async (req, res, next) => {
+
+  const { email, code, newPassword } = req.body;
+  const user = await UsersModel.findOne({ email }).select('+verificationToken');
+  if (!user) {
+    throw createHttpError(404, '此使用者不存在');
+  }
+
+  const payload = verifyToken(user.verificationToken);
+  if (payload.code !== code) {
+    throw createHttpError(400, '驗證碼錯誤');
+  }
+
+  user.password = await bcrypt.hash(newPassword, 6);
+  await user.save();
+
+  res.send({ status: true });
+});
+
+const getInfo = handleErrorAsync(async (req, res, next) => {
+  res.send({
+      status: true,
+      result: req.user
+  });
+});
+
+const updateInfo = handleErrorAsync(async (req, res, next) => {
+  const { userId, name, phone, birthday, address } = req.body;
+
+  const updateData = { name, phone, birthday, address };
+  Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+
+  const updatedUser = await UsersModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      {
+          new: true,
+          runValidators: true
+      }
+  );
+
+  res.send({
+      status: true,
+      result: updatedUser
+  });
+});
 export {
   signup,
   login,
+  forgetPassword,
+  getInfo,
+  updateInfo,
 };
