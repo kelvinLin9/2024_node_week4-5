@@ -6,7 +6,10 @@ import { verifyToken } from '../utils/index.js';
 export const isAuth = async (req, _res, next) => {
     try {
         const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
-        verifyToken(token); // 驗證Token，但不進行用戶查找
+        console.log(token);
+        verifyToken(token);
+        console.log(verifyToken(token));
+        req.user = verifyToken(token);
         next();
     } catch (error) {
         next(error);

@@ -14,9 +14,9 @@ router.use(checkRequestBodyValidator);
 
 router.post('/login', login);
 router.post('/signup', signup);
-router.put('/updatePassword', isAuth, updatePassword);
+router.post('/updatePassword', isAuth, updatePassword);
 router.get('/profile', isAuth, getInfo);
-router.put('/profile', isAuth, updateInfo);
+router.patch('/profile', isAuth, updateInfo);
 
 
 export default router;

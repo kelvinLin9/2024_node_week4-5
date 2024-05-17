@@ -52,24 +52,22 @@ const login = handleErrorAsync(async (req, res, next) => {
 });
 
 const updatePassword = handleErrorAsync(async (req, res, next) => {
-  const { email, currentPassword, newPassword } = req.body;
-  
-  if (!currentPassword || !newPassword) {
+  const { password, confirmPassword } = req.body;
+  console.log(password, confirmPassword, req.user)
+  if (!password || !confirmPassword) {
       throw createHttpError(400, '當前密碼和新密碼均為必填欄位');
   }
 
-  const user = await UsersModel.findOne({ email }).select('+verificationToken');
-  if (!user) {
-    throw createHttpError(404, '此使用者不存在');
+  if(password !== confirmPassword){
+    return next(appError(400, "密碼不一致！", next));
   }
 
-  const isMatch = await bcrypt.compare(currentPassword, user.password);
-  if (!isMatch) {
-      throw createHttpError(400, '當前密碼錯誤');
-  }
+  const user = await UsersModel.findByIdAndUpdate(req.user.userId, {
+    password: confirmPassword
+  });
 
-  user.password = await bcrypt.hash(newPassword, 6);
-  await user.save();
+  console.log(user)
+  generateToken({ userId: user._id })
 
   res.send({ status: true });
 });
