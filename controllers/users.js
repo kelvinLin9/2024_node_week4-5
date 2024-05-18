@@ -62,8 +62,10 @@ const updatePassword = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, "密碼不一致！", next));
   }
 
+  const newPassword = await bcrypt.hash(confirmPassword, 6);
+
   const user = await UsersModel.findByIdAndUpdate(req.user.userId, {
-    password: confirmPassword
+    password: newPassword
   });
 
   console.log(user)

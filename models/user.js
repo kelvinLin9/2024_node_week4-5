@@ -39,12 +39,7 @@ const userSchema = new Schema({
           },
           message: '大頭照的 URL 格式不正確'
       }
-  },
-  verificationToken: {
-      type: String,
-      default: '',
-      select: false
-    }
+    },
 }, {
     versionKey: false,
     timestamps: true
