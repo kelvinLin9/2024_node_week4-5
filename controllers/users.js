@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import createHttpError from 'http-errors';
+import validator from 'validator';
 import UsersModel from '../models/user.js'
 import { generateToken, verifyToken } from '../utils/index.js';
 import { handleErrorAsync} from '../statusHandle/handleErrorAsync.js';
@@ -103,26 +104,52 @@ const getInfo = handleErrorAsync(async (req, res, next) => {
 });
 
 const updateInfo = handleErrorAsync(async (req, res, next) => {
+    const { name, photo, sex } = req.body;
 
-  const { name, phone, sex } = req.body;
+    const userId = req.user.userId;
+    const updateData = { name, photo, sex };
+    
+    // 移除未定義的字段
+    Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 
-  const updateData = { name, phone, sex };
-  Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+    if (name && !validator.isLength(name, { min: 2 })) {
+        throw createHttpError(400, 'name 至少需要 2 個字元以上');
+    }
 
-  const updatedUser = await UsersModel.findByIdAndUpdate(
-      userId,
-      updateData,
-      {
-          new: true,
-          runValidators: true
-      }
-  );
+    if (photo && !validator.isURL(photo, {
+        protocols: ['http', 'https'],
+        require_protocol: true
+    })) {
+        throw createHttpError(400, '大頭照的 URL 格式不正確');
+    }
 
-  res.send({
-      status: true,
-      result: updatedUser
-  });
+    if (sex && !['male', 'female'].includes(sex)) {
+        throw createHttpError(400, '性別格式不正確');
+    }
+
+    const updatedUser = await UsersModel.findByIdAndUpdate(
+        userId,
+        updateData,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
+    if (!updatedUser) {
+        return res.status(404).send({
+            status: false,
+            message: '找不到用戶'
+        });
+    }
+
+    res.send({
+        status: true,
+        result: updatedUser
+    });
 });
+
+
 export {
   signup,
   login,
