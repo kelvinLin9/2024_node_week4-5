@@ -103,9 +103,10 @@ const getInfo = handleErrorAsync(async (req, res, next) => {
 });
 
 const updateInfo = handleErrorAsync(async (req, res, next) => {
-  const { userId, name, phone, birthday, address } = req.body;
 
-  const updateData = { name, phone, birthday, address };
+  const { name, phone, sex } = req.body;
+
+  const updateData = { name, phone, sex };
   Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 
   const updatedUser = await UsersModel.findByIdAndUpdate(
