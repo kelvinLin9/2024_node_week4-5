@@ -95,9 +95,10 @@ const forgetPassword = handleErrorAsync(async (req, res, next) => {
 });
 
 const getInfo = handleErrorAsync(async (req, res, next) => {
+  const user = await UsersModel.findById(req.user.userId);
   res.send({
       status: true,
-      result: req.user
+      result: user
   });
 });
 

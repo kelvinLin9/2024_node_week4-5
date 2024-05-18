@@ -6,7 +6,6 @@ import { verifyToken } from '../utils/index.js';
 export const isAuth = async (req, _res, next) => {
     try {
         const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
-        console.log(token);
         verifyToken(token);
         console.log(verifyToken(token));
         req.user = verifyToken(token);

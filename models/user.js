@@ -40,6 +40,10 @@ const userSchema = new Schema({
           message: '大頭照的 URL 格式不正確'
       }
     },
+    sex: {
+        type: String,
+        enum: ['male', 'female'],
+    }
 }, {
     versionKey: false,
     timestamps: true
