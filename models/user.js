@@ -32,10 +32,10 @@ const userSchema = new Schema({
       default: '',
       validate: {
           validator: function(value) {
-              return validator.isURL(value, {
-                  protocols: ['http', 'https'],
-                  require_protocol: true
-              });
+            return value === '' || validator.isURL(value, {
+                protocols: ['http', 'https'],
+                require_protocol: true
+            });
           },
           message: '大頭照的 URL 格式不正確'
       }
